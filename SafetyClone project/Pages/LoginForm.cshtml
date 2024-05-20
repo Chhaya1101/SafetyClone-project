@@ -1,0 +1,39 @@
+﻿@page
+@model SafetyClone_project.Pages.LoginFormModel
+@{
+}
+
+ <form id="loginform">
+            <h2>LOGIN FORM</h2>
+            <p><u class="font-effect-outline">Please fill in this form for login !</u></p>
+            <div class="loginUname mb-2">
+                <label for="loginenroll">EmaiId:</label>
+
+                <input type="text" id="loginenroll" class="form-control" placeholder="Enter Email Id" required>
+
+                <small id="TxtloginenrollValidation"></small>
+
+            </div>
+
+            <div class="loginPassword mb-2">
+                <label for="loginpassword">Password:</label>
+                <input type="password" id="loginpassword" class="form-control" placeholder="Enter Password" required>
+
+                <small id="TxtloginpasswordValidation"></small>
+            </div>
+    <div class="form-group row mb-2">
+        <div class="col">
+            <div title="orgId">
+                <label for="OrgSelect" class="col-12 col-md-auto col-form-label">Organisation:</label>
+                <select class="form-control" id="OrgSelect" required>
+                    <!-- Populate options dynamically using JavaScript/Server-side code -->
+                </select>
+                <small id="OrganisationValidation" class="form-text"></small>
+            </div>
+        </div>
+        </div>
+            <button type="button" id="loginBtn" class="btn btn-primary w-75 mb-2" style="margin-left:47px;">
+                Login
+            </button>
+
+        </form>
