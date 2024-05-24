@@ -1,0 +1,99 @@
+﻿@page
+@model SafetyClone_project.Pages.College.CreateCertificateModel
+@{
+    Layout ="/Pages/Shared/_college.cshtml";
+}
+
+
+
+
+<body>
+    <form method="post" enctype="multipart/form-data" id="Form">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <p> <button class="btn previous">&laquo; Back</button></p>
+        <header>Student-Certificate Register Form</header><hr>
+        <div class="form-group row mb-2">
+           
+            <div class="col">
+                <div title="fullname">
+                    <label for="TxtFullName" class="col col-md-auto col-form-label"> Student Name:</label>
+                    <div class="input-group">
+                        <input class="form-control" type="text" id="TxtFullName" placeholder="Enter Full Name" required>
+                    </div>
+                    <small id="TxtFullNameValidation" class="form-text"></small>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row mb-2">
+            <div class="col">
+                <div title="description">
+                    <label for="Txtdescription" class="col-12 col-md-auto col-form-label">Description:</label>
+
+                    <div class="input-group">
+                        <input class="form-control" type="text" id="Txtdescription" placeholder="Enter Description" required>
+                    </div>
+                    <small id="TxtdescriptionValidation" class="form-text"></small>
+                </div>
+            </div>
+
+        </div>
+        <button type="button" id="BtnSubmit" class="btn btn-success mb-2">Save</button>
+    </form>
+
+  
+</body>
+<script>
+    $(document).ready(function () {
+       
+     
+        // Button click event
+        $("#BtnSubmit").click(function () {
+            let nameFlag = ($("#TxtFullName").val() != "");
+            let descFlag = ($("#Txtdescription").val() != "");
+
+            // Display validation messages
+            $("#TxtFullNameValidation").toggle(!nameFlag).html("(*) studentname required..!!");
+            $("#TxtdescriptionValidation").toggle(!descFlag).html("(*) description required..!!");
+
+
+            // If all fields are valid, submit the form
+            if (nameFlag && descFlag ) {
+                let user = Cookies.get('userId');
+                let formData = {
+                    studentname: $("#TxtFullName").val(),
+                    description: $("#Txtdescription").val(),
+                    userID: user
+                };
+                uploadData(formData);
+            }
+        });
+        function uploadData(formData) {
+            
+            $.ajax({
+                url: `https://localhost:7105/api/CreateCertificate`,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    console.log('API response:', response);
+                    $('#toast').toast('show');
+                    $('#toast').removeClass('toast-warning toast-danger toast-primary').addClass('toast-success');
+                    $('#toast .toast-body').text('Certificated successfully ');
+
+                    $("#Form").trigger("reset");
+                    window.location.href = '/College/ManageCertificate';
+                },
+                error: function (error) {
+                    
+                        $('#toast').removeClass('toast-warning  toast-success  toast-primary').addClass('toast-danger').toast('show');
+                        $('.toast-body').text('not created ');
+
+                    
+                }
+                });
+        }
+    });
+
+</script>
+
+

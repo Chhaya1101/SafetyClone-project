@@ -1,0 +1,23 @@
+﻿.toast-success {
+    background-color: #dcf1e4 !important;
+    color: #0c622e !important;
+    border-color: #a1dbb8 !important;
+}
+
+.toast-primary {
+    background-color: #e2eaf7 !important;
+    color: #2f5aa2 !important;
+    border-color: #b1c6ea !important;
+}
+
+.toast-warning {
+    background-color: #fbf1dd !important;
+    color: #896110 !important;
+    border-color: #f4d9a4 !important;
+}
+
+.toast-danger {
+    background-color: #fae4e8 !important;
+    color: #b03d50 !important;
+    border-color: #f1b7c1 !important;
+}

@@ -1,0 +1,116 @@
+﻿@page
+@model SafetyClone_project.Pages.Company.adminpageModel
+@{
+    Layout = "/Pages/Shared/_college.cshtml";
+}
+<style>
+
+    .btn-success {
+        background-color: #dcf1e4 !important;
+        color: #0c622e !important;
+   
+    }
+
+    .btn-primary {
+        background-color: #e2eaf7 !important;
+        color: #2f5aa2 !important;
+      
+    }
+    
+</style>
+<div class="container mt-4 " id="container-table">
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="myTable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>CertificateId</th>
+                            <th>StudentName</th>
+                            <th>Description</th>
+                            <th></th>
+                            
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        fetchCertificate();
+
+    });
+        let userId = Cookies.get('userId');
+    function fetchCertificate() {
+        $.ajax({
+                url: `https://localhost:7105/api/getdetailforApproval/Get?userId=${userId}`,
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+
+                responseData = response.data;
+                generateTable(responseData, 'myTable');
+                console.log(response.data);
+
+            },
+            error: function (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    }
+
+    function generateTable(data, tableId) {
+       
+        let userId = Cookies.get('userId'); 
+
+        var body = $('<tbody>');
+        data.forEach(function (item) {
+            var row = $('<tr>').append(
+                $('<td>').text(item.certificateID),
+                $('<td>').text(item.studentName),
+                $('<td>').text(item.description),
+                    $('<td>').append($('<button>').text('Approve').attr('id', `approve-btn-${item.certificateID}`).attr('onclick', `CertiApprove(${item.certificateID}, ${userId}, 'Approved')`))
+            );
+            body.append(row);
+        });
+       
+        $('#' + tableId).append(body);
+    }
+
+        function CertiApprove(certificateID,  userID, status) {
+            $.ajax({
+                url: `https://localhost:7105/api/ActionOnCertificate?certiId=${certificateID}&UserId=${userID}&message=${status}`,
+                type: 'POST',
+                data: {
+                    certiId: certificateID,
+                  
+                    userId: userID,
+                    message: status
+                },
+                success: function (response) {
+                $('.toast-body').text(response.Message || 'Certificate approved successfully.');
+                
+                    $('#toast').removeClass('toast-warning toast-primary toast-danger ').addClass('toast-success');
+                    $('#toast').toast('show');
+
+                    
+                    $(`#approve-btn-${certificateID}`).closest('tr').remove();
+                   
+                },
+                error: function (xhr, status, error) {
+                $('.toast-body').text(error);
+                $('#toast').removeClass('toast-warning toast-primary toast-success ').addClass('toast-danger').toast('show');
+             
+                }
+            });
+        }
+        
+
+
+</script>
+}
+

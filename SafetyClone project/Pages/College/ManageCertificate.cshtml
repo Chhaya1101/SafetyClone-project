@@ -1,0 +1,71 @@
+﻿@page
+@model SafetyClone_project.Pages.College.ManageCertificateModel
+@{
+    Layout = "/Pages/Shared/_college.cshtml";
+}
+<p>
+    <a asp-page="CreateCertificate" class="btn btn-primary">+Add </a>
+</p>
+<div class="container mt-4 " id="container-table">
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="myTable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>CertificateId</th>
+                            <th>StudnetName</th>
+                            <th>Description</th>
+                            <th>IssueDate</th>
+                            <th>Status</th>
+                          
+                           
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        fetchCertificate();
+        
+    });
+
+        function fetchCertificate() {
+            $.ajax({
+                url: `https://localhost:7105/api/GetCertificate/Get`,
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+           
+                    responseData = response.data;
+                generateTable(responseData, 'myTable');
+                    console.log(response.data);
+                   
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        }
+    function generateTable(data, tableId) {
+        var body = $('<tbody>');
+        data.forEach(function (item) {
+            var row = $('<tr>').append(
+                $('<td>').text(item.certificateID),
+                    $('<td>').text(item.studentName),
+                    $('<td>').text(item.description),
+                $('<td>').text(item.createdDate),
+                $('<td>').text(item.status),
+           
+               
+            );
+            body.append(row);
+        });
+        $('#' + tableId).find('tbody').remove();
+        $('#' + tableId).append(body);
+    }
+ 
+</script>
